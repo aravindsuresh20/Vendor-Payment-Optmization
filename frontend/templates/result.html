@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prediction Result</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Global styles: No page-level scrolling */
+    html, body {
+      height: 100%; /* Ensure HTML and Body take full viewport height */
+      margin: 0;   /* Remove default margins */
+      padding: 0;  /* Remove default paddings */
+      overflow: hidden; /* <--- CRITICAL: Prevents any scrolling on the body */
+    }
+
+    /* Fixed Header */
+    .header {
+      position: fixed; /* Make the header fixed */
+      top: 0;          /* Align to the top of the viewport */
+      width: 100%;     /* Span full width */
+      height: 80px;    /* <--- IMPORTANT: Adjust to your actual header height */
+      z-index: 1002;   /* Ensure header is on top of everything else except cursor */
+      background-color: #222; /* Add a background to ensure content below isn't visible */
+      box-sizing: border-box; /* Include padding in height */
+      display: flex; /* Keeping original flex properties */
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px; /* Example padding for header content */
+    }
+
+    /* Fixed Main Content Area (Prediction Result) */
+    .main-content {
+      position: fixed; /* Make the main content area fixed */
+      top: 80px;       /* <--- Start below the header (adjust header height here) */
+      bottom: 50px;    /* <--- End above the footer (adjust footer height here) */
+      left: 0;
+      width: 100%;
+      overflow-y: auto; /* <--- Allows internal scrolling ONLY if content exceeds this area's height */
+      z-index: 1000;   /* Between header and footer */
+      padding: 20px 0; /* Add internal padding for content within main-content */
+      box-sizing: border-box; /* Include padding in height */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Vertically center content if there's extra space */
+      align-items: center; /* Horizontally center content */
+    }
+
+    /* Fixed Footer */
+    .footer {
+      position: fixed; /* Makes the footer fixed */
+      bottom: 0;       /* Align to the very bottom of the viewport */
+      width: 100%;     /* Span the full width */
+      height: 50px;    /* <--- IMPORTANT: Adjust to your actual footer height */
+      background-color: #333; /* Example background color, adjust as needed */
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      z-index: 1001;   /* Ensure footer is on top of main content and backgrounds */
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+      box-sizing: border-box; /* Include padding in height */
+    }
+
+    /* Background elements should cover the whole screen and be truly in the background */
+    .parallax-bg, .particles {
+      position: fixed; /* Make them fixed to the viewport */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Pushes them to the very back */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cursor elements should always be on top of everything */
+    .cursor, .cursor-follower {
+        z-index: 9999; /* Very high z-index */
+    }
+
+    /* The .container within main-content might need specific width/max-width */
+    .main-content > .container {
+        width: 90%; /* Adjust as needed */
+        max-width: 800px; /* Example max width for content */
+    }
+
+    /* Existing inline styles (keep if not in style.css and still needed) */
+    /*
+    .status-badge {
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .status-badge.early {
+      background-color: #d0f0fd;
+      color: #0077b6;
+    }
+    .status-badge.late, .status-badge.delay {
+      background-color: #ffe5e5;
+      color: #d00000;
+    }
+    .status-badge.on-time {
+      background-color: #e0ffe0;
+      color: #007f00;
+    }
+    .check-another {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #444;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .check-another:hover {
+      background-color: #222;
+    }
+    */
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <div class="parallax-bg"></div>
+  <div class="particles" id="particles-js"></div>
+
+  <header class="header">
+    <div class="container">
+      <div class="logo animate__animated animate__fadeInLeft">
+        <img src="{{ url_for('static', filename='images/3.png') }}" alt="Payment Optimizer"/>
+      </div>
+      <nav class="nav animate__animated animate__fadeInDown">
+        <ul>
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="hero animate__fadeInUp">
+        <h1>Prediction <span>Result</span></h1>
+        <p class="subtitle">Here is your intelligent payment prediction</p>
+      </div>
+      <div class="card prediction-card animate__animated animate__fadeInUp animate__delay-1s">
+        <div class="prediction-result animate__animated animate__fadeIn">
+          <div class="result-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Prediction Summary</h3>
+          </div>
+          <div class="result-content">
+            <p><strong>Invoice Amount:</strong> {{ invoice_amount }}</p>
+            <p><strong>Payment Terms:</strong> {{ payment_terms }}</p>
+            <p><strong>Vendor Rating:</strong> {{ vendor_rating }}</p>
+
+            <div class="predicted-status-row">
+                <p class="prediction-status-label"><strong>Predicted Payment Status:</strong></p>
+                <div class="status-badge {{ prediction.lower().replace(' ', '-') }}">
+                  {{ prediction }}
+                </div>
+            </div>
+
+            <div class="check-another-container">
+                <a href="{{ url_for('predictor') }}" class="check-another">🔁 Check Another Prediction</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      Powered By Aravind Suresh
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Vendor Payment Optimization</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+ <div class="cursor"></div>
+ <div class="cursor-follower"></div>
+ <div class="parallax-bg"></div>
+ <div class="particles" id="particles-js"></div>
+
+ <header class="header">
+   <div class="container">
+     <div class="logo animate__animated animate__fadeInLeft">
+       <img src="{{ url_for('static', filename='images/3.png') }}" alt="Payment Optimizer">
+     </div>
+     <nav class="nav animate__animated animate__fadeInDown">
+       <ul>
+         <li><a href="{{ url_for('home') }}">Home</a></li>
+       </ul>
+     </nav>
+   </div>
+ </header>
+
+ <main class="main-content">
+   <div class="container">
+     <div class="hero animate__animated animate__fadeInUp">
+       <h1>Vendor Payment <span>Optimization</span></h1>
+       <p class="subtitle">Maximize your cash flow with intelligent payment predictions</p>
+     </div>
+
+     <div class="card prediction-card animate__animated animate__fadeInUp animate__delay-1s">
+       <div class="card-header">
+         <h2>Payment Prediction</h2>
+       </div>
+       <form action="/predict" method="post" class="prediction-form">
+         <div class="form-group floating">
+           <input type="number" name="invoice_amount" id="invoice_amount" required value="{{ invoice_amount or '' }}">
+           <label for="invoice_amount">Invoice Amount</label>
+           <i class="fas fa-dollar-sign icon"></i>
+         </div>
+         <div class="form-group floating">
+           <select name="payment_terms" id="payment_terms" required>
+             <option value=""></option>
+             <option value="Net 30" {% if payment_terms == 'Net 30' %}selected{% endif %}>Net 30</option>
+             <option value="2/10 Net 30" {% if payment_terms == '2/10 Net 30' %}selected{% endif %}>2/10 Net 30</option>
+             <option value="Net 45" {% if payment_terms == 'Net 45' %}selected{% endif %}>Net 45</option>
+             <option value="Net 60" {% if payment_terms == 'Net 60' %}selected{% endif %}>Net 60</option>
+           </select>
+           <label for="payment_terms">Payment Terms</label>
+           <i class="fas fa-calendar-alt icon"></i>
+         </div>
+         <div class="form-group floating">
+           <input type="number" step="0.1" name="vendor_rating" id="vendor_rating" min="1" max="5" required value="{{ vendor_rating or '' }}">
+           <label for="vendor_rating">Vendor Rating (1-5)</label>
+           <i class="fas fa-star icon"></i>
+         </div>
+         <button type="submit" class="btn btn-primary btn-submit">
+           <span>Predict Payment</span>
+           <i class="fas fa-arrow-right"></i>
+         </button>
+       </form>
+
+       {% if prediction %}
+       <div class="prediction-result animate__animated animate__fadeIn">
+         <div class="result-header">
+           <i class="fas fa-chart-line"></i>
+           <h3>Prediction Result</h3>
+         </div>
+         <div class="result-content">
+           <p><strong>Invoice Amount:</strong> {{ invoice_amount }}</p>
+           <p><strong>Payment Terms:</strong> {{ payment_terms }}</p>
+           <p><strong>Vendor Rating:</strong> {{ vendor_rating }}</p>
+           <p><strong>Predicted Payment Status:</strong></p>
+           <div class="status-badge {{ prediction.lower }}">
+             {{ prediction }}
+           </div>
+         </div>
+       </div>
+       {% endif %}
+     </div>
+   </div>
+ </main>
+
+ <footer class="footer">
+   <div class="footer-bottom">
+     Powered By Aravind Suresh
+   </div>
+ </footer>
+
+ <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+ <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+🟢 DATA OVERVIEW
+     invoice_amount payment_terms  vendor_rating payment_status
+490         1712.87   2/10 Net 30            2.6        On-time
+491        47915.19        Net 60            4.9           Late
+492        33640.50        Net 30            4.4           Late
+493        25293.79   2/10 Net 30            2.8        On-time
+494        28387.35        Net 45            3.6        On-time
+495        36640.87   2/10 Net 30            4.2           Late
+496         5147.00        Net 45            1.5           Late
+497        44120.83        Net 30            4.4           Late
+498        40728.80        Net 45            4.5           Late
+499        22392.94        Net 60            4.7           Late
+
+
+🔢 DATA TYPES
+invoice_amount    float64
+payment_terms      object
+vendor_rating     float64
+payment_status     object
+dtype: object
+
+
+📊 NULL VALUES
+invoice_amount    0
+payment_terms     0
+vendor_rating     0
+payment_status    0
+dtype: int64
+
+
+📈 DESCRIPTIVE STATS
+       invoice_amount  vendor_rating
+count      500.000000     500.000000
+mean     25127.277840       3.025600
+std      14503.279813       1.189797
+min       1044.870000       1.000000
+25%      11538.682500       2.000000
+50%      26288.155000       3.000000
+75%      37791.392500       4.100000
+max      49898.720000       5.000000
+
+
+🔁 VALUE COUNTS
+Late       363
+On-time    129
+Early        8
+Name: payment_status, dtype: int64
